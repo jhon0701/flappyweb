@@ -1,0 +1,106 @@
+<html>
+    <head>
+		<link rel="stylesheet" type="text/css" href="source/styles.css">
+		<script src="source/game.js" type="text/javascript"></script>
+        <title>
+            Flapy bird JS
+        </title>
+        <style>
+            #contentWrap{
+                display: none;
+            }
+            #chatWrap{
+                float: left;
+            }
+        
+        </style>
+        <script src="source/jquery.js" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="source/bootstrap.min.css">
+        <script src="source/bootstrap.min.js" type="text/javascript"></script>
+    </head>
+    <body onload="startGame()"  >
+        <div class="container">
+            <div class="input-group" style="width:300px;text-align:center;margin:0 auto;" id="nickWrap">
+                <input id="nickname" class="form-control input-lg" type="text" placeholder="Coloca tu usuario">
+                <span class="input-group-btn">
+                    <button class="btn btn-lg btn-primary" type="submit" id="setNick">OK</button>
+                </span>
+            </div>
+            <div class="alert fade in alert-danger alert-dismissable" data-dismiss="alert" id="login-error" style="display:none;">
+                <button type="button" class="close" id="closeAlert">×</button>
+                Usuario ya elegido
+            </div>
+            <div id="contentWrap" class="row" style="height: 70%;">
+                <div class="col-md-2"></div>
+                
+                <div id="chatWrap"  class="col-md-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+							Flappy Bird
+
+						</div>
+                        
+                    </div>
+               
+                    
+                    
+                </div>
+         
+         
+         
+         
+                <div class="col-md-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Users
+                          	<button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)"></button>
+                        </div>
+                        <div id="nicknamesConectados" class="panel-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+			
+	
+            jQuery(function ($) {
+                $("#nickname").focus();
+                var evento = io.connect();
+                //CLICK AL BOTON DE ENVIAR NICKNAME
+                $('#setNick').click(function (e) {
+                    //MANDAMOS EL $('#nickname').val() Y RESIBIMOS UNA FUNCION CON existeNickname(true o false)
+                    evento.emit('new user', $('#nickname').val(), function (existeNickname) {
+                        //SI NO existeNickname MOSTRAMOS EL CONTENEDOR CON LA LISTA DE LOS NICKNAME Y EL CONTENEDOR DEL CHAT
+                        if (existeNickname===false) {
+                            $('#nickWrap').hide();
+                            $('#contentWrap').show();
+                           
+                            
+                        } 
+                        //SI SI EXISTE EL NICKNAME MOSTRAMOS EL CONTENDOR #login-error CON EL MENSAJE DE QUE ESE NICKNAME YA EXISTE
+                        if (existeNickname===true) {
+                            $("#login-error").show();
+                        }
+                    });
+                    $('#nickname').val('');
+                    e.preventDefault();
+                });
+                $('#closeAlert').click(function (e) {
+                    $("#login-error").hide();
+                });
+                
+                evento.on('usernames', function (listaDeNicknames) {
+                    //CREAMOS LA VARIABLE html PARA ESCRIBIR AHI TODOS LOS NICKNAMES CONECTADOS
+                    var html = '';
+                    for (var nicknameConectado in listaDeNicknames) {
+                        html += nicknameConectado + ' '+'Conectado'+'<br/>';
+                    }
+                    //ESCRIBIMOS EN EL CONTENEDOR nicknamesConectados TODOS LOS NICKNAMES CONECTADOS
+                    $('#nicknamesConectados').html(html);
+                });
+            });
+        </script>
+    </body>
+</html>

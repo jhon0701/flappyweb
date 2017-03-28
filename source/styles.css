@@ -1,0 +1,26 @@
+canvas {
+    border:1px solid #d3d3d3;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-image: url("flappy_birdbg.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+}
+button {
+	
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-image: url("push.png");
+    background-size: 100% 100%;
+    width: 80px;
+    height:80px
+    
+	}
+
